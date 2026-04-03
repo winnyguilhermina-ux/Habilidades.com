@@ -1,0 +1,23 @@
+{
+  "name": "Hab.com - Aprende e Ensina",
+  "short_name": "Hab.com",
+  "description": "A maior rede de mentores digitais de Angola. Aprende habilidades que dão dinheiro.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#dc2626",
+  "icons": [
+    {
+      "src": "https://picsum.photos/seed/hab-app/192/192",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://picsum.photos/seed/hab-app/512/512",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

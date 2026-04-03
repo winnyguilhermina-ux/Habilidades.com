@@ -1,0 +1,102 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: profissionais
+    // Fields:
+    //   - nomeCompleto: string
+    //   - whatsapp: string
+    //   - cidade: string
+    //   - cursoId: string
+    //   - experiencia: string
+    //   - certificado: bool
+    //   - biografia: string
+    //   - oQueEnsina: string
+    //   - modalidade: string (online, presencial, ambos)
+    //   - preco: number
+    //   - createdAt: timestamp/string
+    //
+    // Collection: inscricoes
+    // Fields:
+    //   - nomeCompleto: string
+    //   - whatsapp: string
+    //   - cidade: string
+    //   - cursoId: string
+    //   - profissionalId: string
+    //   - modalidade: string
+    //   - disponibilidade: string
+    //   - observacao: string (optional)
+    //   - createdAt: timestamp/string
+    //
+    // ===============================================================
+
+    // Helper Functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isValidString(field, min, max) {
+      return request.resource.data[field] is string && 
+             request.resource.data[field].size() >= min && 
+             request.resource.data[field].size() <= max;
+    }
+
+    function isValidProfissional() {
+      let data = request.resource.data;
+      return data.nomeCompleto is string && data.nomeCompleto.size() < 100 &&
+             data.whatsapp is string && data.whatsapp.size() < 20 &&
+             data.cidade is string &&
+             data.cursoId is string &&
+             data.experiencia is string &&
+             data.certificado is bool &&
+             data.biografia is string && data.biografia.size() < 2000 &&
+             data.oQueEnsina is string &&
+             data.modalidade in ['online', 'presencial', 'ambos'] &&
+             data.preco is number && data.preco >= 0 &&
+             data.plano in ['gratis', 'destaque'];
+    }
+
+    function isValidInscricao() {
+      let data = request.resource.data;
+      return data.nomeCompleto is string && data.nomeCompleto.size() < 100 &&
+             data.whatsapp is string && data.whatsapp.size() < 20 &&
+             data.cidade is string &&
+             data.cursoId is string &&
+             data.profissionalId is string &&
+             data.modalidade is string &&
+             data.disponibilidade is string;
+    }
+
+    function isValidMensagem() {
+      let data = request.resource.data;
+      return data.profissionalId is string &&
+             data.alunoNome is string && data.alunoNome.size() > 0 && data.alunoNome.size() < 100 &&
+             data.conteudo is string && data.conteudo.size() > 0 && data.conteudo.size() < 1000 &&
+             data.createdAt is string;
+    }
+
+    // Profissionais
+    match /profissionais/{profId} {
+      allow read: if true; // Publicly readable to allow students to find mentors
+      allow create: if isValidProfissional();
+      allow update, delete: if false; // For MVP, we don't allow updates yet without auth logic
+    }
+
+    // Inscrições
+    match /inscricoes/{inscId} {
+      allow read: if false; // Private
+      allow create: if isValidInscricao();
+      allow update, delete: if false;
+    }
+
+    // Mensagens
+    match /mensagens/{msgId} {
+      allow read: if true;
+      allow create: if isValidMensagem();
+      allow update, delete: if false;
+    }
+  }
+}

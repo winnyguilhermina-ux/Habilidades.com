@@ -1,0 +1,81 @@
+{
+  "entities": {
+    "Curso": {
+      "title": "Curso",
+      "description": "Definição de um curso digital.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "nome": { "type": "string" },
+        "descricao": { "type": "string" },
+        "icone": { "type": "string" }
+      },
+      "required": ["id", "nome", "descricao", "icone"]
+    },
+    "Profissional": {
+      "title": "Profissional",
+      "description": "Definição de um profissional/professor.",
+      "type": "object",
+      "properties": {
+        "nomeCompleto": { "type": "string" },
+        "whatsapp": { "type": "string" },
+        "cidade": { "type": "string" },
+        "cursoId": { "type": "string" },
+        "experiencia": { "type": "string" },
+        "certificado": { "type": "boolean" },
+        "biografia": { "type": "string" },
+        "oQueEnsina": { "type": "string" },
+        "modalidade": { "type": "string", "enum": ["online", "presencial", "ambos"] },
+        "preco": { "type": "number" },
+        "portfolioUrl": { "type": "string" },
+        "fotoUrl": { "type": "string" },
+        "destaque": { "type": "boolean" },
+        "verificado": { "type": "boolean" }
+      },
+      "required": ["nomeCompleto", "whatsapp", "cidade", "cursoId", "experiencia", "certificado", "biografia", "oQueEnsina", "modalidade", "preco"]
+    },
+    "Inscricao": {
+      "title": "Inscrição",
+      "description": "Definição de uma inscrição de aluno.",
+      "type": "object",
+      "properties": {
+        "nomeCompleto": { "type": "string" },
+        "whatsapp": { "type": "string" },
+        "cidade": { "type": "string" },
+        "cursoId": { "type": "string" },
+        "profissionalId": { "type": "string" },
+        "modalidade": { "type": "string" },
+        "disponibilidade": { "type": "string" },
+        "observacao": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["nomeCompleto", "whatsapp", "cidade", "cursoId", "profissionalId", "modalidade", "disponibilidade"]
+    },
+    "Mensagem": {
+      "title": "Mensagem",
+      "description": "Definição de uma mensagem direta entre aluno e profissional.",
+      "type": "object",
+      "properties": {
+        "profissionalId": { "type": "string" },
+        "alunoNome": { "type": "string" },
+        "conteudo": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["profissionalId", "alunoNome", "conteudo", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/profissionais/{profissionalId}": {
+      "schema": "Profissional",
+      "description": "Coleção de profissionais cadastrados."
+    },
+    "/inscricoes/{inscricaoId}": {
+      "schema": "Inscricao",
+      "description": "Coleção de inscrições de alunos."
+    },
+    "/mensagens/{mensagemId}": {
+      "schema": "Mensagem",
+      "description": "Coleção de mensagens enviadas aos profissionais."
+    }
+  }
+}
